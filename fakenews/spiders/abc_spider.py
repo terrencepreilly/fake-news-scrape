@@ -1,8 +1,7 @@
 """ A spider to scrape the fake news site abcnews.com.co """
-import re
 import scrapy
 
-TAGS = re.compile('<.+?>')
+from .utils.tags import extract_paragraphs
 
 PAGES = 5
 
@@ -19,15 +18,6 @@ class ABCSpider(scrapy.Spider):
         url = 'http://abcnews.com.co'
         yield scrapy.Request(url=url, callback=self.parse)
 
-    def _extract_ps(self, all_ps):
-        """Extract the inner html from all the paragraphs, and remove tags."""
-        text = ''
-        for p in all_ps:
-            curr = p.extract()
-            if isinstance(curr, str):
-                text += ' '.join(TAGS.split(curr))
-        return text
-
     def _extract_article_and_metadata(self, detail):
             h1 = detail.css('h1')
             if len(h1) == 0:
@@ -38,7 +28,7 @@ class ABCSpider(scrapy.Spider):
             author = detail.css('.td-post-author-name a::text').extract_first()
             image = detail.css('.td-post-featured-image img::attr(src)')
             image_url = image.extract_first()
-            content = self._extract_ps(
+            content = extract_paragraphs(
                 detail.css('.td-post-text-content p')
                 )
             return {
