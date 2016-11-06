@@ -2,7 +2,9 @@
 
 import scrapy
 
-from .utils.tags import extract_paragraphs
+from ..utils.tags import extract_paragraphs
+
+PAGES = 5
 
 
 class NationalReportSpider(scrapy.Spider):
@@ -10,11 +12,26 @@ class NationalReportSpider(scrapy.Spider):
     name = 'national_report'
 
     start_urls = [
-        ('http://nationalreport.net/casey-anthony-breaks-silence-calls'
-         '-planned-parenthood-baby-killers/'),
+        'http://nationalreport.net/category/media/'
         ]
 
+    def __init__(self, *args, **kwargs):
+        self.count = 0
+        super().__init__(*args, **kwargs)
+
     def parse(self, response):
+        current_pages = response.css(
+            '.entry-title a::attr(href)'
+            ).extract()
+        for page in current_pages:
+            yield scrapy.Request(url=page, callback=self._parse_page)
+
+        next_url = response.css('.older a::attr(href)').extract_first()
+        if next_url is not None and self.count < PAGES:
+            self.count += 1
+            yield scrapy.Request(url=next_url, callback=self.parse)
+
+    def _parse_page(self, response):
         content = response.css('#content')
         meta = content.css('.entry-meta')
         post_date = meta.css('abbr::attr(title)').extract_first()

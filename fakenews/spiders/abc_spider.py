@@ -1,7 +1,7 @@
 """ A spider to scrape the fake news site abcnews.com.co """
 import scrapy
 
-from .utils.tags import extract_paragraphs
+from ..utils.tags import extract_paragraphs
 
 PAGES = 5
 
