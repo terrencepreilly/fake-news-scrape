@@ -3,7 +3,7 @@ import scrapy
 
 from ..utils.tags import extract_paragraphs
 
-PAGES = 5
+PAGES = 13
 
 
 class ABCSpider(scrapy.Spider):
@@ -15,7 +15,7 @@ class ABCSpider(scrapy.Spider):
         return super().__init__(*args, **kwargs)
 
     def start_requests(self):
-        url = 'http://abcnews.com.co'
+        url = 'http://abcnews.com.co/'
         yield scrapy.Request(url=url, callback=self.parse)
 
     def _extract_article_and_metadata(self, detail):
@@ -44,6 +44,11 @@ class ABCSpider(scrapy.Spider):
         for detail in response.css('.item-details'):
             ret = self._extract_article_and_metadata(detail)
             if ret is not None:
+                comments = extract_paragraphs(
+                    response.css('.comment-content p'),
+                    as_list=True,
+                    )
+                ret['comments'] = comments
                 yield ret
         self.curr += 1
         if self.curr < PAGES:

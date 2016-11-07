@@ -2,10 +2,7 @@
 
 _\( managed using [todo-md](https://github.com/Hypercubed/todo-md) \)_
 
-- [ ] nationalreport.net
-  - [ ] Add comments
-- [ ] abcnews.com.co
-  - [ ] Add comments
-- [ ] newsexaminer.net
-- [ ] worlddailynewsreport.com
+- [x] nationalreport.net
+- [x] abcnews.com.co
+- [x] newsexaminer.net
 - [x] thebostontribune.com
