@@ -26,12 +26,11 @@ def convert_to_markdown(infile, outfile):
         output += add('## {}', 'author')
         output += add('### Posted {}', 'post_date')
         output += add('![]({})', 'image_url')
-        for content in data[i]['content'].split('  '):
-            output += content + '\n\n'
-        output += '### Comments\n\n'
-        for comment in data[i]['comments']:
-            output += '- {}\n'.format(comment)
-        output+= '\n'
+        output += add('{}', 'content')
+#        output += '### Comments\n\n'
+#        for comment in data[i]['comments']:
+#            output += '- {}\n'.format(comment)
+        output += '\n'
 
     with open(outfile, 'w') as fout:
         fout.write(output)
