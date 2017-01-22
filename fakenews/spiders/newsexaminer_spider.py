@@ -44,8 +44,8 @@ class NewsExaminerSpider(scrapy.Spider):
             as_list=True,
             )
         post_date = [
-            x.css('::text').extract_first() for x in
-            response.css('meta')
+            x.css('::attr(content)').extract_first()
+            for x in response.css('meta')
             if (x.css('::attr(property)').extract_first()
                 == 'article:published_time')
             ]
